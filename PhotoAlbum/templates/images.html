@@ -1,0 +1,112 @@
+{% extends 'basic.html' %}
+
+{% block body %}
+
+
+<div class="container my-5">
+      <div class="row d-flex justify-content-center">
+        <div class="card mr-2" style="width: 18rem;">
+          <div class="card-body">
+            <h3 class="card-title text-center my-2 font-weight-bold ">Total Classifications</h3>
+            <hr>
+            <h3 class="card-text text-center font-weight-bold text-primary">{{total}}</h3>
+            
+          </div>
+        </div>
+        <div class="card mr-2 rounded" style="width: 18rem;">
+          <div class="card-body">
+            <h3 class="card-title text-center my-2 font-weight-bold ">Correct Classifications</h3>
+            <hr>
+            <h3 class="card-text text-center font-weight-bold text-success">{{pos}}</h3>
+          </div>
+        </div>
+        <div class="card mr-2" style="width: 18rem;">
+          <div class="card-body">
+            <h3 class="card-title text-center my-2 font-weight-bold">Incorrect Classifications</h3>
+            <hr>
+            <h3 class="card-text text-center font-weight-bold text-danger">{{neg}}</h3>
+            
+          </div>
+        </div>
+  </div>
+</div>
+
+
+<div class="mx-4 my-3 d-flex justify-content-center row">
+{% for img in preds %}
+{% if img.label == img.classification_category %}
+<div class="card col-md-2 mx-1 my-4 rounded " style="width: 202px;height:300px;box-shadow:  7px 7px 14px #a38181,
+             -7px -7px 14px #fff5f5;">
+  <img class="card-img-top pt-1" src="/media/{{img.image}}" style="width: 100%; height:160px;" alt="Card image cap">
+  <br>
+  <div class="card-body text-success">
+    <p class="card-text bold">Class: {{img.classification_category}}</p>
+    <p class="card-text bold">Probability: {{img.probability}}</p>
+  </div>
+</div>
+{% else %}
+<div class="card col-md-2 mx-1 my-4 rounded " style="width: 202px;height:300px;box-shadow:  7px 7px 14px #a38181,
+             -7px -7px 14px #fff5f5;">
+  <img class="card-img-top" src="/media/{{img.image}}" style="width: 100%; height:160px;" alt="Card image cap">
+  <br>
+  <div class="card-body text-danger">
+    <p class="card-text bold">Class: {{img.classification_category}}</p>
+    <p class="card-text bold">Probability: {{img.probability}}</p>
+  </div>
+</div>
+{% endif %}
+{% endfor %}
+</div>
+
+{% if pagn %}
+<div class="container my-5">
+  <div class="d-flex justify-content-center">
+    <nav aria-label="...">
+      <ul class="pagination">
+        <!-- first page link -->
+        
+
+        <!-- previous page link -->
+        {% if preds.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="{% url 'images' %}?page={{preds.previous_page_number}}" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="?page=1">First<span class="sr-only"></span></a>
+        </li>
+        <li class="page-item"><a class="page-link" href="{% url 'images' %}?page={{preds.previous_page_number}}">{{preds.previous_page_number}}</a></li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item disabled">
+          <a class="page-link" href="?page=1">First<span class="sr-only"></span></a>
+        </li>
+        {% endif %}
+        <li class="page-item active">
+          <a class="page-link" href="#">{{preds.number}} <span class="sr-only">(current)</span></a>
+        </li>
+        <!-- next page link -->
+        {% if preds.has_next %}
+        <li class="page-item"><a class="page-link" href="{% url 'images' %}?page={{preds.next_page_number}}">{{preds.next_page_number}}</a></li>
+        <li class="page-item">
+          <a class="page-link" href="{% url 'images' %}?page={{preds.next_page_number}}">Next</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="{% url 'images' %}?page={{preds.paginator.num_pages}}">Last <span class="sr-only"></span></a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="">Next</a>
+        </li>
+        <li class="page-item disabled">
+          <a class="page-link" href="{% url 'images' %}?page={{preds.paginator.num_pages}}">Last <span class="sr-only"></span></a>
+        </li>
+        {% endif %}
+        <!-- last page -->
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endif %}
+{% endblock body %}
